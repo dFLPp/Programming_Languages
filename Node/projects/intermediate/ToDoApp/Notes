@@ -1,0 +1,899 @@
+Esse é um projeto "motivacional" feito para "gerar vontade" de aprender as tecnologias separadas.
+Vou estar copiando o projeto feito em um tutorial do freecodecamp (canal do youtube) e  estar fazendo as anotações aqui.
+Boa parte das ferramentas utilizadas são desconhecidas por mim (no momento de criação das anotações), portando serei descritivo.
+O curso apresenta as tecnologias, mas presupõe conhecimento básico em JavaScript. 
+Além disso, foca em fazer vocẽ entender o porque das coisas.
+
+* Stack utilizada: * 
+(stack é o conjunto de tecnologias usadas para criar um app)
+Svelte (framework para front End)
+SvelteKit (API + backend)
+Postgres (relational sql)
+Vercel (host api e frontEnd)
+Railway (host e conection with database)
+Typescript ("evolução" do JavaScript)
+prima (intermediador entre database e backend)
+NPM scripts ("cola" os modules importados no app final)
+gitpod (programação "na nuvem", com 1 environment para cada task)
+
+* Project overview: *
+Vai ser um To-do list pois engloba todas as ferramentas básicas que você usará em algum projeto futuro.
+basicamente é um bom objeto ditádico porque dá pra explicar e aplicar todas as partes do CRUD (Create, Read, Update, Delete)
+as 4 operações básicas de "persistent storage".
+
+* UI e Architecture: *
+O que diferencia amadores de experientes e a capacidade de pensar e planejar antes de programar. Primeiro deve-se construir o layout (UI) que o front end terá (esse não será o foco do tutorial, mas vai ser discutido) e então propor uma estrutura para o app. Como cada parte vai se integrar com a outra.
+A estrutura básica do projeto é: 
+Usar svelte para criar o front end; 
+Colocar o "site no ar" Vercel e sveltekit;
+Usar svelteKit para trabalhar com API's;
+Armazenar coisas no Postgre;
+Usar railway para colocar a "database no ar";
+Usar Prima para intermediar a API com o Server;
+	 EX: O front end pede por todos os To-do items. Esse pedido é encaminhado para a API, que informa o Prisma.
+	 Ele informa ao Postgre e recebe uma SQL response. Então converte essa SQL response em um javaScript object
+	 que é redirecionada para a API. A API então transforma os dados em JSON e manda de volta para o Front End.
+Para usar o gitpod você deve usar a sua extensão de navegador ou colocar "gitpod.io/#" antes do link do seu github (do repo do seu projeto)
+
+* Boas práticas: *
+Trabalhar na mainbrench não é recomendado. Ao invés disso você desse usar feature brenches. Basicamente você cria uma issue dentro da aba "issues" do seu repo e apartir dela cria o código. 
+Depois de cria-lô você faz a pull request e então faz o merge. Essa é uma boa prática que previne erros.
+
+---- Início do projeto ----
+
+-- Inicializando o app --
+(OBS: vou utilizar o gitpod para o projeto, mas saiba que ele não é grátis. Tem o limite de 50h por mês)
+
+Crie a primeira issue: "inicializando o app" e depois use o gitpod button para te levar até uma nova aba. Você terá um VS code online que funciona da mesma maneira que o local. Abra o console e
+use: <npm init svelte@next .> (o comando está entre <>), assim você instalará o sveltekit. Dê "y" na primeira pergunta, então escolha o Skeleton project e escolha "usar typescript", no resto use
+"n". Você acabou de istalar o sveltekit no seu repository. Agora execute o comando <npm install> para instalar algumas dependencias e depois disso execute <npm run dev> para "ligar o server" 
+no qual o app vai ficar. Repare que o seu local host não responde porque a conexão foi feita na nuvem, ou seja, o local host aberto é do proprio gitpod.
+
+Depois disso feche o server ao usar Ctrl+C e então faça o commit, seja através do terminal ou usando o VS code. Use o símbolo do lado no símbolo do commit (no VS code) para criar uma pull
+request. Se você criou uma issue e usou o gitpod através dela, você pode automaticamente anexar esse pull request a essa issue. Para isso, primeiro renomeie a box "title", ela é nome da brench.
+Repare que o gitpod criou automaticamente uma brench e então vai fazer o pull request para fazer o merge dela na main. E a parte mais importante, na descriação da pull request você deve colocar:
+"Close #1." (sem as aspas). Basicamente isso vai anexar essa pull request à primeira issue criada. Para anexar à outra issue basta que você saiba qual é o número dela e então coloque após o "#".
+
+Você basicamente resolveu uma task, uma issue, e portanto pode "se desfazer" desse environment. A ideia e descarta-los mesmo, você quase nunca vai precisar reutiliza-los. 
+Você simplismente usa ele como rascunho para seu código, testa tudo e então faz uma pull request. Depois de ser aceita você fecha esse environment pois o código já está no gitHub. 
+Repare que nenhum arquivo foi criado localmente no pc, tudo ficou na "nuvem". Para desliga-lo basta ir até o menu no canto superior esquerdo e ir na opção "gitpod close ..."
+Se você estivesse fazendo isso localmente, você teria que criar a feature brench e provavelmente não conseguiria anexar a pull request à issue. 
+Além disso, você teria que concluir a issue e deletar a brench criada de modo manual e no fim você faria um <git push> para sincronizar o repo local com o do github.
+
+-- Explicando os arquivos criados --
+
+quando você faz <npm init svelte@next .>, você cria um projeto usando svelte. Com isso são criadas arquivos de configurações básicos em uma "estrutura convencional" para uma web aplication.
+A ideia do svelte e de outros frameworks é: "vou organizar os arquivos da melhor maneira e fornecer ferramentas para os dev's nessa estrutura". No caso do svelte, ele atua como uma espécie de
+compilador, juntando todos arquivos svelte e convertendo em java script puro. Nesse sentido eis algumas files importantes:
+
+"package.json"
+Aí você pode encontrar informações do projeto, como sua versão (que pode ser alterada a media que você faz novos deploys), pode encontrar as dependências do seu projeto (em "quê" ele está sendo
+construido e com que ferramentas) e pode encontrar scripts, que são códigos disponibilizados pelas dependencies. Por exemplo, como o svelte é um "compiler", é necessário fazer a "build" do app
+para depois fazer o deploy.  Para fazer a build você pode usar o script "build" que se refere ao comando  "svelte-kit build". Outro script importante é o "preview" (abre um server para o app,
+deve ser usado depois de fazer o build). Como sabemos, scripts são códigos feitos por alguém. Nesse caso, os scripts de cima foram importados (feitos por outras pessoas e sendo usados por nós),
+nesse contexto, para rodar scripts utiliza-se o comando <npm  run script> onde script é o nome do script.
+
+"svelte.config.js"
+É nesse arquivo que informações mais técnicas como permitir uso de SASS e diferentes CSS preprocessors, escolher qual adapter usar (adapter é uma tecnologia usada para poder fazer o deploy, "lançamento", do app.
+Também encontramos o "target", onde a página/aplicativo vai renderizar/atualizar o conteúdo quando existir interação. Normalmente ela se refere à div cujo id="svelte", do arquivo app.html que fica na pasta src
+
+"./src/routes/index.svelte"
+É nesse arquivo em que o conteúdo do app.html está. Repare que dentro da div citada anteriormente existe a sintaxe: "%svelte.body%". Todo o conteúdo dentro de index.svelte vai ser usado para subtstituir esse placeholder( adicionar conteúdo à div).
+Você pode verificar isso ao abrir um novo environment, usar <npm install>, depois <npm run dev> (procedimento padrão parar ver o site) e então entrar na porta que foi aberta.
+
+No caso de você querer criar mais páginas para seu app/site basta você criar um arquivo dentro da pasta routes. Quando você for testar, não vai ver nada de diferente, porém, se no final da url você colocar: "/<nome-da-pagina>", ela vai aparecer.
+
+"tsconfig.json"
+É o arquivo de configuração para usar o typescript, é algo tecnico demais. Você normalmente não mexe.
+
+-- Configurando o gitpod --
+Fazer o setup onde, toda vez que um novo environment for criado, ele rode algums comandos básicos automaticamente (como npm install) e adicionar automaticamente algumas extensões do VS code.
+
+Primeiro criamos o arquivo ".gitpod.yml" no root do projeto (na pasta inicial, onde o "package.json" também fica) e então adiciona-se as configurações (para saber os detalhes de cada termo leia a documentação do gitpod):
+##
+tasks:
+  - init: npm install
+    command: export HMR_HOST=`gp url 3000` && npm run dev
+
+ports:
+  - port: 3000
+    onOpen: open-browser
+
+vscode:
+  extensions:
+    - svelte.svelte-vscode
+
+github:
+  prebuilds:
+    master: true
+    branches: true
+    pullRequests: true
+##
+
+No bloco "tasks:" estamos dizendo o que vai acontecer quando o env for iniciado. "init:" vai fazer o <npm install> e o "command:" vai executar o <npm run dev>. Além disso, o "command:" vai
+fazer a "criação"/export de uma variable de ambiente usando o resultado do comando <gp 3000>. Explicação mais adiante. 
+Outra maneira de escrever o código do "command:" é:
+##
+command: |
+      export HMR_HOST=`gp url 3000`
+      npm run dev
+##
+Agora tratando de portas, o comando "onOpen:" vai dizer o comportamento do gitpod quando uma porta específica estiver aberta. Nesse caso quando a porta 3000 existir, o gitpod abre ela.
+"vscode:" Esse bloco de código é criado automaticamente na realidade. Dentro do VS code online (criado pelo gitpod), você vai na aba extensões e escolhe uma. Depois disso você não a instala,
+clica na engranagem do lado e então na opção "adicionar ao yml"
+O bloco "github:" é o responsável por automatizar os acontecimentos quando trabalhando em equipe. Basicamente, sempre que for criada uma branch ou uma pull request for criada, as tasks acima vão ser executadas.
+
+O svelte-kit utiliza de uma tecnologia chamada de "vite". Ele tem uma proriedade chamada de hot modular reloading (HMR) e basicamente é usado para atualizar algumas partes da página
+automaticamente (sem precisar reiniciar a página). Em projetos feitos localmente (sem o gitpod), não atrapalha em nada. Entretanto, no gitpod, o server aberto tem uma url que varia, e dessa forma o vite fica confuso e não sabe a quem se conectar e que porta acessar.
+
+Para mudar o comportamento do vite deve-se ir até "svelte.config.js" e, depois de colocar uma vírgula após o '#svelte', coloca-se o código:
+##
+vite: {
+	server: {
+		hmr: {
+			clientPort: process.env.HMR_HOST ? 443: 3000,
+			host: process.env.HMR_HOST ? process.env.HMR_HOST.substring("https://".length) : "localhost"
+		}
+	}
+}
+##
+Vamos acessar o vite, depois acessar seu server, depois acessar especificamente a propriedade de hmr e então trocar os parâmentros base. Para essa alteração vamos utilizar JavaScript básico
+(ternary operator). Usando nossa variável exportada e usando ela aqui através do "process.env" verificamos: se ela existir, ou seja, se estivermos usando o gitpod, então a clientPort do vite
+será 443 (https), se não, vai ser 3000 (que será do localhost).
+Analogamente, se process.env.HMR_HOST existir, significa que o gitpod criou uma url nova, portanto precisamos achar ela e usar como parâmetro para o vite. Se não existir simplismente usamos o localhost como host.
+OBS: O comando "gp 3000" usado lá em cima é usado para pegar/armazenar a url aleatória gerada pelo gitpod (junto da port). Então ao fazer "process.env.HMR_HOST.substring("https://".length)" estamos simplismente pegado a url criada pelo gitpod e adicionando a string "https://" antes dela.
+
+-- HTML structure --
+
+Vou seguir a estrutura do tutorial mas tenho idéias para expandir o app (criar feature de bloco de notas, um menu lateral com opção de log-in e troca de temas, fornecer novos temas para usuários que o usam o app constantemente, etc)
+
+O processo é relativamente simples. Primeiro faz-se todo o procedimento de criar uma issue e abrir o gitpod e então vamos até o index.svelte (dentro de "/src/routes").
+É ai que a página principal vai ficar. Como já citado antes, se você quiser novas páginas basta criar outro arquivo .svelte dentro dessa pasta.
+Não sei se é o recomendado, mas aqui vamos fazer html puro, para depois fazer o css puro e etc. Não tem muito o que explicar, basta você testar layouts para seu app e depois colocar dentro desse arquivo.
+## /src/routes/index.svelte
+<h1> Todos </h1>
+
+<form action="" method="">
+  <input type="text" name="tap-first-insert" aria-label="Adicione um item" placeholder="Clique e adicione um item">
+</form>
+##
+- svelte components -
+Sabemos que o número de itens é dinâmico (pode ser criado e removido facilmente) e que eles tem uma estrutura cíclica/repetitiva.
+(cada item tem uma caixa para marcar como concluido, tem uma area para alterar o texto do item e um botão para excluir o item)
+Dessa forma podemos usar de components, uma "tecnologia" utilizada por diversos frameworks, aqui sendo aplicado no svelte.
+Para criar um conponenet no svelte basta ir até dentro da pasta "src" e criar uma nova pasta (ex: lib) e dentro dessa pasta basta criar um novo arquivo (que será o component), por exemplo "todo-item.svelte".
+Dentro desse arquivo nos escrevemos uma espécie de "pedaço de html" e damos um nome para ele, dessa forma podemos criar vários como se fosse uma função.
+Basicamente basta escrever a estrutura html de um to-do item dentro desse arquivo e então "chamar ele" dentro do index.svelte
+## /src/lib/todo-item.svelte
+<div>
+  <!-- Cada "form" é uma parte da linha. Essencialmente usa-se "form" porque ele possue a property "method" e com ela podemos nos comunicar com databases e com o JavaScript facilmente -->
+  <form action="" method="">
+    <input> type="hidden" name="check-state" value="" >
+    <button aria-label="check done/not done">check status</button>
+  </form>
+  
+  <form action="" method="">
+    <input> type="text">
+    <button aria-label="save item">save button</button>
+  </form>
+  
+  <form action="" method="">
+    <button aria-label="delete item">delete button</button>
+  </form>
+</div>
+##
+
+Agora precisamos adicionar esse component dentro do index.svelte e adicionar um título para a página. 
+Para adicionar um título dinâmico (que muda de acordo com a página) precisamos ir até o /src/app.html e antes do </head> colocar %svelte.head%. Se você se lembra, uma sintaxe semelhante a essa foi usada no body, servindo como placeholder.
+Dessa forma basta voltar até index.svelte e usar um component especial (criado "automaticamente" pelo svelte) chamado de <svelte:head> e dentro dele basta adicionar o código e então o placeholder %svelte.head% vai ser substituido por esse código.
+
+Por fim adicionamos tudo no "index.svelte":
+## /src/routes/index.svelte
+<script> 
+import TodoItem from "$lib/todo-item.svelte"
+// outra maneira seria: import TodoItem from "../lib/todo-item.svelte"
+
+const title = "Título da página";
+// Agora basta mudar o valor dessa variable que, tando o título da página quando o heading dela vão ser substituido pelo mesmo valor
+</script>
+
+<svelte:head>
+ <title>{title}</title>
+</svelte:head>
+
+<h1> {title} </h1>
+
+<form action="" method="">
+  <input type="text" name="tap-insert-field" aria-label="Adicione um item" placeholder="Clique e adicione um item">
+</form>
+<!-- "chame" o component várias vezes -->
+<TodoItem>
+<TodoItem>
+<TodoItem>
+##
+
+-- Fazendo o CSS --
+Existem diversas formas de fazer o css e vou mostrar algumas possibilidades com o svelte.
+Para criar um CSS que valhe para toda página basta criar um arquivo ".css" dentro da pasta /src e depois ir no index.svelte e, dentro da tag script fazer o import dela: "import ../style.css" por exemplo.
+
+Ao fazer dessa forma, o CSS só vai ser aplicado para aquela página em específico, ou seja, se dentro da pasta routes, nós criarmos outra página(ex: about-us.svelte), aquele css não vai ser aplicado nessa página.
+
+Dessa forma, para criar um CSS que é aplicado para todas as páginas do app é necessário criar um arquivo chamado de "__layout.svelte" dentro da pasta routes.
+Dentro de "__layout.svelte" é preciso fazer duas coisas: 
+  1. adicionar uma script tag e importar o CSS escolhido
+  2. fora da script tag usar o component "<slot />"
+Basicamente, usar "__layout.svelte" é como colocar uma camada por cima do código, dessa forma, se você não colocar o <slot />, o conteúdo das páginas não vão ser renderizados.
+OBS: tudo que você colocar dentro do "__layout.svelte" vai ser aplicado/replicado para todas as páginas da sua aplicação
+ 
+Ou seja, duas maneiras:
+  fazer o import da css file (dentro da pasta src) diretamente no index.svelte
+  criar "__layout.svelte" file dentro da pasta routes e então importar o css e renderizar o conteúdo (com o <slot />)
+
+Claro que você precisa um CSS específico para alguns casos, dessa forma, além de usar o CSS padrão para todas as páginas (feito com o import) você também pode, dentro do index.svelte, criar uma <style> tag e fazer o CSS para aquela página e aqueles elementos específicos.
+
+É importante fazer a observação que: esse CSS feito com <style> não vai interferir nos components criados por nós, ou seja, por mais que dentro do meu component "TodoItem" existe um input, o style feito localmente não vai alterar esse input.
+Hipotéticamente, seu eu quiser alterar todos de uma vez, por exemplo para tirar suas bordas, eu teria que:
+  primeiro: envolver todo o código em uma div/selector/classe
+  segundo: teria que utilizar a configuração do svelte :global
+  e ficaria: .class :global(input){}
+
+Falta agora aprender a fazer o CSS do component "TodoItem" que nós criamos. Basta simplistmente criar uma tag <style> dentro do arquivo que o contém, ou seja, vá até /src/lib/todo-item.svelte (nesse exemplo) e então crie a tag style. Claro que, dependendo da situação você vai precisar renomear os elementos e criar classes/ids para eles.
+
+Bom agora, basta aplicar o CSS. Para saber mais detalhes da aplicação basta olhar o vídeo ou então ir na pull request relacionada ao CSS e olhar o que foi adicionado.ke
+
+
+
+-- Making CRUD endpoints --
+Nessa parte vamos criar a API do app. Vamos desenvolver e definir qual parte da página vai receber informação da data base, qual vai enviar informações para a data base e como as funcionalidades do site vão funcionar.
+Não vamos criar tudo aqui, vamos simplesmente mapear e categorizar o "o que" cada parte da página vai fazer.
+
+Estrutura:
+POST (criar um item) -> /todos.json
+GET ("salvar" itens) -> /todos.json
+DELETE (deletar um item) -> /todos/:uid.json
+PATCH (atualizar um item (seu status e seu texto)) -> /todos/:uid.json
+
+endpoints são simplesmente funções escritas em javascript ou em typescript que se realcionam com o protocolo http. 
+- POST E GET -
+Ex:
+## dado um arquivo chamado de [slug].json.js
+import db from '$lib/database'; /*(supondo que existe um link para a data base aí)*/
+
+export async function get({params}){
+  const {slug} = params;
+  const article = await db.get(slug);
+  if (article){
+    return{
+      body: {
+        article
+      }
+    }
+  }
+}
+##
+Esse exemplo basicamente diz: dado um arquivo json e uma data base conectada, se o site, especificamente o "article" requisitar dados, você vai pegar os dados de acordo com a página. Como essa página tem como conteúdo o arquivo "[slug].json.js", então faz-se um get desse elemento até a database. Se ele existir você passa essas informações no body da página.
+
+Repare que a função exportada é async e o seu resultado é await. Semelhante ao que vimos prevemente em python, isso basicamente nos diz que: a função async pode ser chamada em momentos distintos e que ela só vai ter uma resposta depois de esperar o resultado (depois que o await chegar).
+Para mais informações olhe a documentação do svelte.
+
+O svelte possue um algorítimo/file system inteligente o suficiente para encontrar arquivos .json de acordo com a localização dele. Basicamente precisamos criar uma pasta para nossa api que criará os todo-items. Para isso basta criar uma "new folder" (chamada todos, por exemplo) dentro da pasta "routes" e dentro dela criar o arquivo "index.json.ts". Nesse arquivo vamos criar as funcionalidades básicas usando typescript.
+
+Typescript nos dá ferramentas para facilitar o trabalho. Basicamente podemos refazer o exemplo lá de cima, de maneira mais objetiva usando typescript. Além disso, nós também ganhamos a "recomendações" para auto completar o código (Ctrl + space) o que ajuda bastante (acredite).
+
+## Escreva:
+import type { RquestHandler } from "@sveltejs/kit";
+
+export const get: RequestHandler = () =>{
+  return{
+    status: 200,
+    body: "Hello from API."
+  }
+}
+/* graças ao código acima, quando acessarmos o arquivo "index.json.ts" pela url o conteúdo da página vai ser "Hello from API." (pois, por natureza, o browser mandar um get request com o seu server de desenvolvimento (o que você ligou com npm run dev))
+
+/* Como nos queremos pegar o texto do input da página e salvar/persistir ele, precisamos, de alguma forma, realionar o input com o POST */
+
+/* No typescript existe uma propriedade chamada de "FormData". O MDN diz que essa é uma maneira simples de construir key/value pairs (o necessário para criar .json) através de "form fields and their values". Em outras palavras, se usarmos o FormData podemos pegar o valor de um <form> do html e criar um key/value pair. */
+
+/* A ideia básica é: dado o <form> criado na página, através do FormData, vamos usar um get() para pegar o valor do input (lembre que o input está dentro de um <form>) então transformar em key/value pair. Depois disso podemos salvar/persistir esses dados em .json e então salva-los em uma data base ou usar outro Endpoint para fazer outra coisa */
+
+/* Dessa forma: */
+
+export const post: RequestHandler<{}, FormData> = (request) => {
+ console.log(request.body.get("textoDoInput"))
+ 
+ /*você precisa ter um return object, se não dá erro*/
+ return{
+   status: 200,
+   body: request.body.get("textoDoInput")
+ }
+}
+/* A string "textoDoInput" é na realidade o "name" que você deu para o <input>*/
+##
+
+Lembra quando eu disso que o svelte consegue diferenciar qual arquivo é .json dentro da pasta /routes... então, isso deixa as coisas confusas.
+Suponha que você tenha criado a pasta "todos" dentro da pasta "routes" e que, dentro da pasta "todos" você tenha criado o arquivo (endpoint) chamado de "index.json.ts". Tanto o svelte quanto o browser não vão ler esse nome, vão ler "todos.json".
+Ou seja, mesmo que você tenha escrito "index.json.ts" o svelte vai "renomear temporariamente" o arquivo e chamar ele de "todos.json". Você pode pensar em conpactação.
+Dentro da pasta "todos" podem existir diversos endpoints, por isso o svelte "junta" todos eles em um único arquivo json chamado de "todos.json".
+
+Sabendo disso agora precisamos ir até index.svelte e finalmente preencher as properties do <form>. 
+A sua action="/todos.json" e seu method = "post". Se tudo der certo, quando você escrever um texto, e enviar ele (apertar enter), o conteúdo dele vai ser pêgo (get) e vai ser "post"ado como o conteúdo do body DO arquivo /todos.json (você verá que foi redirecionado para ".../todos.json"
+
+Agora é preciso "refatorar" o código para ter o que queremos. Não queremos que o usuário saia da pagina é vá para a url com ".../todos.json". Queremos que a pagina reinicie, ele continue nela, e que o conteúdo do "todo-item" seja substituido por esse texto.
+Como ainda não temos uma data base, o modo mais simples de fazer os dados persistirem é salvando eles em objeto do javascript. Por que um objeto? 
+Porque além de salvar o texto (string), queremos salvar quando o item foi criado, qual é o seu status e possivelvemente quando foi alterado pela ultima vez (etc)
+
+##Primeiro: refazer o return object para que a página não seja redirecionada
+
+export const post: RequestHandler<{}, FormData> = (request) => {
+ console.log(request.body.get("textoDoInput"))
+ 
+ return{
+   status: 303,
+   headers: {
+     location: "/"
+   }
+ }
+}
+## segundo: crie, usando typescript, um type chamado de "Todo" para nossos todos, dentro do arquivo "/src/global.d.ts".
+
+/* Do mesmo jeito que __layout funciona, o global.d.ts vai ser um local onde você pode criar objetos, funções e etc para usar em todo o código. Escreva: */
+
+type Todo = {
+  created_at: Date;
+  content: string;
+  done: boolean;
+}
+
+##terceiro: dentro do "index.json.ts" crie uma lista para armazenar/persistir os todo objects.
+let todos: Todo[] =[];
+/* Essa lista só vai aceitar itens to "type" Todo */
+
+##quarto: Ainda em "index.json.ts", você agora tem que salvar o texto e as outras propriedades do "todo" object quando ele for criado.
+/* Para isso basta ir dentro do post endpoint, definir as propriedades que cada todo object vai ter quando for criado, e então fazer o "push" dele para a lista "todos". */
+
+export const post: RequestHandler<{}, FormData> = (request) => {
+ todos.push({
+   created_at: new Date();
+   text: request.body.get("textoDoInput")
+   done: false
+ });
+ 
+ return{
+   status: 303,
+   headers: {
+     location: "/"
+   }
+ }
+}
+
+##quinto: Dentro de index.json.ts, referente ao GET endpoint, dentro do body você tem que retornar a lista "todos":
+
+export const get: RequestHandler = () => {
+  return {
+    status: 200,
+    body: todos
+  }
+}
+
+##sexto: toda vez que o form for enviado, um todo object vai ser criado e vai ser salvo dentro da lista "todos". Agora precisamos usar esses informações salvas e atualiza-las, fazer o seu fetch, na página.
+
+/* Em "index.svelte", você vai exportar outro script e dentro dele vai colocar o código para fazer o fetch */
+<script context="module" lang="ts">
+  import type { Load } from "@sveltejs/kit";
+  
+  export const load: Load = async({ fetch }) => {
+    const res = await fetch("/todos.json")
+    
+    if (res.ok){
+      const todos = await res.json()
+      return{
+        props: { todos }
+      }
+    }
+    
+    const { message } = await res.json()
+    return{
+      error: new Error(message)
+    }
+  };
+</script>
+
+/* depois disso vá até o script já criado (onde importamos o TodoItem) e altere-o: */
+<script lang="ts">
+  import TodoItem from "$lib/todo-item.svelte"
+  export let todos: Todo[];
+  const tittle = "título da página"
+</script>
+
+/* Basicamente: usando a função "load", nos vamos pegar os dados de "/todos.json" usando especificamente a função fetch. Como os dados "variam", não tem fluxo previsível, a função precisa do async. */
+/* Se tudo der certo vamos criar a variable "todos" e ela vai ter exatamente o mesmo conteúdo que "/todos.json" (foi uma volta desgraçada só para isso). E então nos retornamos "todos" COMO UMA property para que possamos usar a parte textual (content)*/
+/* Se acontecer algum erro, o if statement não vai rodar, e uma mensagem de erro vai ser criada e retornada. */
+
+/* Fluxograma: Texto no input -> texto enviado -> objeto criado -> dados escritos em "/todos.json" -> dados pegos pela load function -> se tudo correto criamos uma array com todos os dados localmente ("todos") -> exportamos "todos" como um property -> cria-se um loop para renderizar o "content" do "todos" object dentro de cada TodoItem -> toda vez que o texto é enviado cria-se um TodoItem com o conteúdo correspondente */
+
+/* Precisamos agora efetivamente criar um TodoItem para cada submit do form e além disso, "linkar" os dados da array "todo" para dentro do objeto (isso será feito ao importar "todos" para dentro de "todo-item.svelte").*/
+/* substitua seus todo items por isso: */
+{#each todos as todo}
+  <TodoItem todo = {todo} />
+{/each}
+/* Agora vá até todo-item.svelte e no topo do arquivo escreva: */
+<script lang="ts">
+  export let todo: Todo;
+</script>
+/* E vá até até a parte onde o texto do item fica e adicione a property value */
+<input type="text" value="{todo.content}"/>
+##
+
+
+Pronto, agora toda vez que o <form> for enviado, ele vai pegar o conteúdo do input, transformar esse conteúdo em um key/value pair e com esse conteúdo e com outros dados (como a Data de criação e seu status (done = false no momento da criação)), esse grande conjunto de dados vai ser persistido/salvo em uma variável chamada de todos. Essa variável só aceita elementos do tipo Todo, ou seja, variáveis/dados que possuem content (texto), data de criação de status.
+Depois de salvar os dados, o app vai recarregar eles e toda vez que um o input "nativo" for enviado (<form> inicial), o value da key "content" vai ser atribuido como o value de outro input, agora o input do todo-list.
+
+Claramente tudo isso é confuso e difícil, mas se você analisar calmamente da pra perceber a simplicidade dos processos: Pegamos os dados, convertemos eles de modo a nos favorecer, salvamos os dados, com os dados salvos trocamos o value de um input por outro e recarregamos a página para outro ciclo.
+
+
+- DELETE -
+Para fazer esse endpoint vamos precisar refatorar/refazer partes do código. Primeiro precisamos perceber que o "delete" vai ser feito de um item de cada vez.
+Uma maneira de fazer isso é deixar o path até esse crud point como dinâmico (o nome da file muda), dessa forma, o delete end-point vai ser chamado para diferentes todo-items, e vamos classificar/diferenciar cada todo-item pelo seu "uid".
+
+Primeiro vamos criar o endpoint file, dentro da pasta em /src/routes/todos, crie o arquivo [uid].json.ts. Os colchetes vão ser os reponsáveis por alterar dinâmicamente o nome do arquivo.
+
+Só para ver como isso funciona, crie um get endpoint básico (assim você consegue testar as coisas no browser):
+##
+export const ger = (request) =>{
+  return {
+    status: 200,
+    body: request.params.uid
+  }
+}
+##
+Em "request.params.uid", params vai pegar, na URL, o texto que ficaria entre colchetes e vai tratar ele como uid.
+Nesse exemplo, se você for na url do projeto e colocar no final /todos/textoDoUid.json, nesse caso você irá para uma nova página onde o conteúdo é justamente a parte dinâmica "textoDoUid.json".
+Esse foi só um exemplo de como esse filename dinâmico funciona.
+Agora você pode apagar e reescrever:
+##
+import type { RequestHandler } from "@sveltejs/kit";
+export const del: requestHandler = (request) =>{
+
+}
+##
+Onde a linha  "export const del: requestHandler = (request)" vai estar criando o endpoint delete (representado pelo "del") através de um parâmetro que é a request.
+
+Porém temos um problema. Precisamos saber qual é o uid do todo-item antes de usar o endpoint, mas não conseguimos ter essa informação porque ela está em outro arquivo (no get e post endpoints { é a linha: "let todos: Todo[] = [];" }).
+
+O que vamos fazer então é: Criar um arquivo "central" e que vai ser ignorado pelo svelte (vai começar com "_") que vai distinguir qual é o endpoint necessário e redirecionar a request para esse endpoint.
+Crie o arquivo "_api.ts" e dentro dele coloque a linha que vai salvar/persistir os todo-items na memmória (let todos: Todo[] = [];)
+
+É dentro desse arquivo que vamos criar o "cerebro" por trás do site. Se o user quer criar um item ele vai gerar um request, que vai ser lida por essa file e redirecionada para o endpoint file correto. 
+Agora precisamos construir ela:
+##
+import type { Request } form "@sveltejs/kit";
+export const api = (request: Request) => {
+  let body = {};
+  let status = 500;
+  
+  switch(request.method.toUpperCase()){
+    case "GET":
+      body = todos;
+      status = 200;
+      break;
+   
+   default:
+     break;
+  }
+  
+  return {
+    status,
+    body
+  }
+}
+##
+Ainda está incompleto, mas basicamente estamos transportando as funcionalidades de /src/routes/index.json.ts para esse arquivo.
+Caso o metodo da request seja um get (O user quer logar/carregar seu todo-items) então ele vai retornar (como body) "todos", que é justamente os todo-items que foram salvos na memória local.
+
+Agora que nós criamos uma central para lidar com as requests, precisamos "ligar"/conectar ela com "src/routes/index.json.ts". Para isso, dentro de src/routes/index.json.ts, apague toda o código relacionado ao get e escreva:
+##
+import { api } from "./_api";
+
+export const get: RequestHandler = (request) => {
+  return api(request);
+}
+Pronto, tudo conectado, agora vamos fazer o mesmo para o post method, antes que as letras vermelhas do vs code deem um infarto em você:
+
+Atualizando o arquivo "_api.ts":
+
+##
+import type { Request } from "@sveltejs/kit";
+export const api = (request: Request, todo?: Todo) => {
+  let body = {};
+  let status = 500;
+  
+  switch(request.method.toUpperCase()){
+    case "GET":
+      body = todos;
+      status = 200;
+      break;
+      
+    case "POST":
+      todos.push(todo);
+      return {
+    	status: 303,
+    	headers: {
+      	  location: "/"
+    	}
+      }
+      break;
+   
+    default:
+      break;
+  }
+  
+  return {
+    status,
+    body
+  }
+}
+##
+
+E refazer o post endpoint feito em "/src/routes/index.json.ts" e agora criar um conexão para que agora ele use o arquivo "_api.ts" apague ele e escreva:
+##
+export const post: RequestHandler<{}, FormData> = (request) => {
+  return api(request, {
+    created_at: new Date(),
+    content: request.body.get("tap-first-insert"),
+    done: false
+  });
+}
+##
+OK ------- Até agora nós so refatoramos o código para que ele fique mais flexivel/organizado e que para possamos criar o delete endpoint.
+Vamos agora até "[uid].json.ts" e escrever:
+##
+import type { RequestHandler } from "@sveltejs/kit";
+import { api } from "./_api";
+
+export const del: RequestHandler = (request) => {
+  return api(request);
+}
+##
+E, assustadoramente, é isso. Não precisamos fazer mais nada NESSE arquivo. Simplimente dizemos: "você deleta né, então, a nossa api vai fazer todo o trabalho e ai quando ela terminar nos te devolvemos o resultado e você entrega ele para user, belê??"
+Agora temos que criar, dentro da api, todo o código que vai efetivamente deletar o todo-item.
+
+Primeiro precisamos ir até "/src/global.d.ts" e dar ao Todo type (type/classe criado com typescript) um uid:
+##
+type Todo= {
+  uid: string;
+  created_at: Date;
+  content: string;
+  done: boolean; 
+}
+##
+
+Depois disso você perceberá que um erro surgiu em "/src/routes/index.json.ts", ele está reclamando que o Todo type uma nova caracteristica e que ela não está sendo enviada para api.
+O jeito correto de se resolver isso seria: importar uma package especializado em uid e dar um uid novo e diferente para cada item, porém, como nos vamos deixar de usar o armazenamento local para usar uma database, podemos usar uma medida paliativa:
+vamos dar ao todo-item um uid igual a data de sua criação. A curto prazo não tem problema nenhum, mas se duas pessoas pessoas criam um todo-item ao mesmo tempo, eles vão ter o mesmo uid e isso dará problema, por isso vamos mudar isso mais a frente.
+ESSE É UMA MEDIDA PALIATIVA:
+##
+export const post: RequestHandler<{}, FormData> = (request) => {
+  return api(request, {
+    uid: `${Date.now()}`, //fazer um uid melhor para evitar confitos
+    created_at: new Date(),
+    content: request.body.get("tap-first-insert"),
+    done: false
+  });
+}
+##
+
+Agora vamos voltar para "_api.ts" e atualizar o arquivo com o comportamento caso ocorra delete:
+##
+import type { Request } from "@sveltejs/kit";
+let todos: Todo[] = [];
+
+export const api = (request: Request, todo?: Todo) => {
+  let body = {};
+  let status = 500;
+  
+  switch(request.method.toUpperCase()){
+    case "GET":
+      body = todos;
+      status = 200;
+      break;
+      
+    case "POST":
+      todos.push(todo);
+      return {
+    	status: 303,
+    	headers: {
+      	  location: "/"
+    	}
+      }
+    case "DELETE":
+      todos = todos.filter(todo => todo.uid !== request.params.uid)
+      status: 200;
+      break;
+   
+    default:
+      break;
+  }
+  
+  return {
+    status,
+    body
+  }
+}
+##
+O que fizemos foi um filter basicamente, ele vai retirar da array o todo-item que tem aquele uid
+
+Recapitulando:
+	- refatoramos o código de modo que agora existe um arquivo chamado "_api.ts" que é o cerébro do nosso site. Ele vai descobrir qual request o usuário esta fazendo através do endpoint, depois disso o endpoint manda as informações para a api e ela faz o que tem que fazer, depois disso ela repassar as informações obtidas para o respectivo endpoint e daí em diante o endpoint se comunica com a interface que dá um feedback para o user.
+	- criamos uma nova caracteristica para os nossos todo-items, eles agora tem um uid que é igual a sua data de criação. Essa é uma MEDIDA PALIATIVA, por que está sujeita a erros e problemas, porém quando formos uma database (ao invés de salvar os todo-itens na memória) vamos resolver isso.
+	- criamos um novo endpoint file. Não se confunda: Teremos dois endpoint FILES, uma file será "estática" (a "index.json.ts") que vai lidar com o POST e GET endpoints, já a outra file é dinâmica, seu nome muda de acordo com o UID do todo-item e dentro dela estão contidos o DELETE e o FETCH endpoint. 
+	- Repare que os endpoints são recebem a request e enviam uma response, porém o responsável por fazer o código, pegar uma informação, usar efetivamente o javascript, é a api ("/src/routes/todos/_api.ts")
+
+
+OK ----------- Agora vamos para a fase 2
+Nós já temos a parte de endpoints prontas, agora precisamos criar o código para retornar uma mensagem na iterface, dessa forma o user vai poder ver e entender que ele efetivamente apagou o item.
+
+Para que o item seja efetivamente apagado temos que adicionar essa funcionalidade ao botão de lixeira, que está em todo-item.svelte:
+##
+<form action="/todos/{todo.uid}.json" method="delete">
+        <button aria-label="delete item" class="delete-button"></button>
+</form>
+##
+adicionamos uma action e um method para o botão mas ocorreu um erro. Basicamente, html não reconhece/interpreta o method delete, ele só entende os methodes post e get.
+Dessa forma, nosso trabalho, como web dev, e ter que lidar com esse contratempo com gambiarra.
+O design da api é bom e é recomendado você usar o delete e o fetch methods, dessa forma outras versões do site, como uma versão mobile, funcionam bem. 
+Esse é um contratempo único/específico do desenvolvimento web e temos que dar um jeito nisso sem alterar a api.
+Isso na realidade é um problema recorrente/conhecido por web devs, vamos reatribuir a action e o method:
+##
+<form action="/todos/{todo.uid}.json?_method=delete" method="post">
+        <button aria-label="delete item" class="delete-button"></button>
+</form>
+##
+A ideia é simples: No svelte existe um arquivo que consegue interceptar as requests que o browser faz antes de que ela chegue na nossa api, esse arquivo você tem que criar dentro de /src e o nome dele é "hooks.ts". 
+Em outros frameworks existem arquivos com esse nome, porém com funcionalidades diferentes, então, não confunda. 
+
+Basicamente, nos podemos criar codigo, dentro desse arquivo, de modo que ele vai ser executado antes de que a request chegue na nossa api (e por consequência mande uma response) 
+Em "/src/hooks.ts" escreva esse exemplo:
+##
+import type { Handle } from "@sveltejs/kit";
+export const handle: Handle = async ({ request, resolve }) => {
+  const response = await resolve(request);
+  return response;
+}
+##
+Essa é a estrutura básica da função Handle. Basicamente, quando o browser enviar uma request (a qualquer momento, por isso async), a função Handle vai pegar essa request e vai executar uma função chamada de resolve, Modificando a request, e só depois que essa modificação é feita, nos retornamos a "response", que será considerada a "nova" request.
+Apartir daí essa "request modifcada" vai para a api e depos disso a api da uma response ao browser como se nada tivesse acontecido.
+
+O que queremos é: verificar se a request foi feita pelo botão da lixeira. Como o browser não pode Mandar um delete method, nós, através desse código, vamos artificialmente trocar o method que antes era de post (como foi estabelecido la em cima) para delete e dessa forma vamos poder deletar.
+Para descubrirmos se a request foi mandada pela botão da lixeira, vamos utilizar um query selector.
+Query selector nada mais é do que uma especie de classe. Se um elemento do html tem essa "classe", então ele vai ser pego no query selector. 
+Na linha: "form action="/todos/{todo.uid}.json?_method=delete" method="post">" perceba que existem a parte "?_method=delete", isso é um query selector. Usando essa notação, foi criada a querry selector chamada de "_method"
+
+Agora nós podemos criar o código:
+## "/src/hooks.ts"
+import type { Handle } from "@sveltejs/kit";
+export const handle: Handle = async ({ request, resolve }) => {
+  if (request.query.has("_method")){
+    request.method = request.query.get("_method").toUpperCase();
+  }
+  const response = await resolve(request);
+  return response;
+}
+##
+Isso por si só faz o trabalho, porém nós não estamos sendo redirecionados para o local certo. Para que possamos ser redirecionados, temos que ir até "_api.ts" e dentro do "case DELETE" precisamos fazer o redirecionamento.
+
+Porém podemos fazer de outra maneira: repare que, para todos os methods execeto o GET, nos queremos ser automaticamente redirecionados para o index.html. Dessa forma podemos simplismente fazer um "if não get, redirecione automaticamente":
+## "/src/routes/todos/_api.ts"
+import type { Request } from "@sveltejs/kit";
+export const api = (request: Request, todo?: Todo) => {
+  let body = {};
+  let status = 500;
+  
+  switch(request.method.toUpperCase()){
+    case "GET":
+      body = todos;
+      status = 200;
+      break;
+      
+    case "POST":
+      todos.push(todo);
+      body = todo;
+      status = 201;
+      break;
+      
+    case "DELETE":
+      todos = todos.filter(todo => todo.uid !== request.params.uid)
+      status: 200;
+      break;
+   
+    default:
+      break;
+  }
+  
+  if (request.method.toUpperCase() !== "GET") {
+    return {
+    	status: 303,
+    	headers: {
+      	  location: "/"
+    	}
+      }
+  }
+  return {
+    status,
+    body
+  }
+}
+##
+Feito. Dessa forma, através do "hooks.ts" nos modificamos a request do browser antes de 
+chegar na api e e verificamos se ela tinha o query selector "_method" igual a "DELETE", se sim, ela mudaria o tipo da request recebida para DELETE e repassaria essa "nova request" para a api.
+Dai em diante a api executou o código realicionado ao DELETE endpoint (fez o filter na array onde os todo-itens estão, e apagou aquele com uid correspondente) e enviou a responsta devolta para o navegador, redirecionando o user para a a página inicial. 
+
+
+
+
+- PATCH -
+
+Queremos usar esse endpoint de modo a poder:
+1. Alterar o texto/conteúdo de um item depois que ele foi criado.
+2. Marcar um item como Done/not-Done (alterar uma propriedade do "type" Todo.
+
+Vamos começar com o 1.
+Como NESSE CASO, para fazer essas alterações, signifca que precisamos de um uid e por consequência vamos fazer no mesmo lugar onde fizemos o delete endpoint.
+## /src/routes/todos[uid].json.ts
+// add:
+
+export const patch: RequestHandler<{}, FormData> = (request)  => {
+	return api(request, {
+	  content: request.body.get("content")
+	  })
+}
+
+##
+Porém, quando passamos algum parâmetro do Todo-item para nossa API, ela necessita que TODO os parâmetros do todo-item sejam passados, e no caso do patch só queremos modificar o "content" e o "status".
+Para resolver isso vamos usar uma funcionalidade do TypeScript e "remodelar" a nossa api.
+## /src/routes/todos/_api.ts
+//change
+let todos: Todo[] = [];
+
+import type { Request } from "@sveltejs/kit";
+export const api = (request: Request, data?: Record<string, unknown>) => {
+  let body = {};
+  let status = 500;
+  
+  switch(request.method.toUpperCase()){
+    case "GET":
+      body = todos;
+      status = 200;
+      break;
+      
+    case "POST":
+      todos.push(data as Todo);
+      body = data;
+      status = 201;
+      break;
+      
+    case "DELETE":
+      todos = todos.filter(todo => todo.uid !== request.params.uid)
+      status: 200;
+      break;
+    
+    case "PATCH":
+      todos = todos.map(todo => {
+        if (todo.uid === request.params.uid){
+          todo.content = data.content as string;
+        }
+        return todo;
+      });
+      status = 200;
+      break;
+      
+    default:
+      break;
+  }
+  
+  if (request.method.toUpperCase() !== "GET") {
+    return {
+    	status: 303,
+    	headers: {
+      	  location: "/"
+    	}
+      }
+  }
+  return {
+    status,
+    body
+  }
+}
+##
+Com isso nós conseguimos contornar a restrição da nossa API de só aceitar um pârametro do TodoItem se todos vierem juntos.
+Além disso já criamos o case "PATCH" é basicamente estamos pegando dizendo: "se o uid da request for igual ao uid do todo-item, troque o texto dele".
+
+Podemos agora "linkar" nosso Form com esse endpoint:
+
+## /src/lib/todo-item.svelte
+// No form cuja classe é "text-section"
+
+    <form action="/todos/{todo.uid}.json?_method=patch" method="post" class="text-section">
+        <input  class="text-space" name="content" type="text" style="border: none;" value="{todo.content}"/>
+        <button aria-label="save item" class="save-button"></button>
+    </form>
+##
+
+
+2. Vamos agora atualizar a característica/propriedade done.
+
+
+Primeiro vamos dar configurar o botão que representa a "checkbox"
+## /src/lib/todo-item.svelte
+// La na parte final
+
+     .finished {
+    opacity: 0.4;
+    filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.1));
+  }
+  
+  .finished .status {
+    background-color: black;
+    background-image: url("data:image/svg+xml,%3Csvg width='22' height='16' viewBox='0 0 22 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20.5 1.5L7.4375 14.5L1.5 8.5909' stroke='%23676778' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+
+</style>
+
+<div class="list-item" class:finished={todo.done}>
+    <form action="/todos/{todo.uid}.json?_method=patch" method="post">
+        <input type="hidden" name="check-state" value="{todo.done ? '' : true}">
+        <button aria-label="check todo as todo.done ? 'On progress' : 'Finished' " class="status"></button>
+    </form>
+##
+Além disso, vamos modificar:
+## /src/routes/todos[uid].json.ts
+export const patch: RequestHandler<{}, FormData> = (request) => {
+  return api(request, {
+    content: request.body.get("content"),
+    done: request.body.has("check-state") ? !!request.body.get("check-state") : undefined
+  });
+} 
+##
+
+E modificar:
+## /src/routes/_api.ts
+case "PATCH":
+        todos = todos.map(todo => {
+          if (todo.uid === request.params.uid){
+            if (data.content){
+              todo.content = data.content as string;
+            }
+            else { todo.done = data.done as boolean}
+          }
+          return todo;
+        });
+        status = 200;
+        break;
+##
+
+------------xxx------------
+
+Nesse curso ainda existem mais aulas, porém como o intúito não é necessáriamente aprender todos os detalhes e sim ter uma visão paupável de o que eu vou conseguir na metade/final da trilha de web dev, esses conceitos são o sufuciente.
+
+Por questões mercadológicas e mesmo de ensino provavelmente vou aprender/me "especilizar" em React/Next.js, porém Svelte é uma opção bastante viável pois:
+1. pessoas falam bem/elogiam
+2. não tive Muita dificuldade em aprender a como usar.
+
+Apartir daqui eu diria que o foco principal é:
+	- Aprender um JS intermediário (async functions e outros conceitos)
+	- A longo prazo/no momento certo aprender TypeScipt
+	- Começar a analisar "minunciosamente" um framework.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

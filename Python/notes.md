@@ -1,0 +1,414 @@
+#My python notes (1)
+
+##Intro
+
+####Criação
+Python foi criado por  Guido van Rossum em 1991. É uma liguagem de proposito geral, servindo desde web-dev até GUI's. Suporta diversos paradigmas de programação, entre eles OOP, e tem como grande diferencial ter uma sintaxe parecida com o inglês. Python é uma liguagem 'interpretada' (precisa de um **intepreter** para entender as *nuancias* do código e só depois passar ele para um compilador)
+
+Assim como outras liguagens, o python tem uma solução para rodar codigo em no terminal de comando. Assim como o node.js tem o REPL, o python tem o python shell, mas no geral, para  escrever programas, você cria um arquivo com a extensão .py, e que deverá ser compilado.
+
+#### Computadores, de acordo com Von Neumann (possuem):
+* Dispositivos de Entrada e Saída (recebem e enviam dados. ex: teclado e impressora)
+* Memória (armazena informações em bits (8 bits = 1 byte) graças a sua característica binária (0 e 1's) e facilmente associado a impulsos elétricos (circuito fechado ou aberto))
+* Programa (sequência de instruções que devem ser executadas, uma de cada vez, pela UCP)
+* Unidade Central de Processamento (UCP) é dividido em 3 partes:
+	1. Memória local (usada para trabalhar os dados internamente)
+	2. Unidade de Controle (O contador de programa(CP) vai indicar o local da memória em que a próxima instrução a ser executada está. A unidade de controle decide se executa ou se passa a execução para a ULA (próximo tópico))
+	3. Unidade Lógica e Aritimética (vai executar operações aritiméticas (contas) ou lógicas (mover dados). Depois que a intrução é finalizada o CP é atualizado e passa a próxima instrução a ser executada. Dando início a outro loop)
+
+#### Alguns termos e considerações
+1. **Algorítimo** é uma sequências de passos para resolver um problema computacional (como uma função matemática)
+2. **Programa** é um algorítimo aplicado/construido em uma linguagem de programação específica para resolver certo problema.
+3. Não estou supondo que alguem exceto eu use estas anotações, mas caso alguém esteja, saiba que estou ocultando propositalmente detalhes pois já é algo implicito ao programador experiente. 
+
+####Exemplo de programa
+```
+x = float(input())
+if x > 2: print(f"{round(x)} is greater than two!") 
+else:
+	print(f"{round(x)} is less than two!") 
+#Repare que se não existisse indentação para indicar o else block, o python não entenderia a condicional
+```
+
+####Destrinchando o programa
+1. Variables:
+	Variáveis são endereços de memória reservados ao armazenamento de um dado/informação. Em python não é necessário destacar um tipo para a variavel. 
+	Na linha 1, estamos **atribuindo** à variavel de nome x um valor do tipo float, obtido da função input(), que serve para obter dados do usuário.
+	Dependendo do contexto/**escopo** onde as variables são inicialmente declaradas, elas não podem ser acessadas em outra parte do codigo.
+
+2. Comentários:
+	Ao usar `#` estamos dizendo ao interpreter para ignorar o resto da linha. Uma maneira de comentar várias linhas é usar aspas tripas (""")
+3. Condicional e sintaxe:
+	Repare que no bloco condicional não usamos nem paranteses nem chaves, no lugar usamos os `:`
+	
+4. Strings:
+	Strings são arrays(listas) de caracteres no formato UTF-8 (que é convertido para ASCII). Usa-se `""` ou `''` para descrever uma.
+	Na função print, usamos um dos metodos de formatação chamado de **f string**, ele é como se fosse o `${var}` só que você pode usar aspas normais e não precisa usar o *$*.
+	OBS: você também pode usar placeholders como %d, %s, etc.
+	
+	Ainda em strings, existem alguns methods convenientes como `map()` e `slipt()`. Veja o exemplo:
+	```
+	a, b, c, d = map(float, input('diga 4 números: ').split())
+	#input() por padrão retorna uma string
+	#split() por padrão vai separar um string pelo 'espaço'
+	"""
+	map() vai fazer a conversão do segundo argumento para o 1 argumento
+	Nesse contexto, vai transformar a lista de strings em uma lista de floats
+	"""
+	#Na atribuição de variáveis estamos realizando o destructuring do js, chamado aqui de unpacking.
+	```
+
+5. Destructuring (unpacking):
+	Consiste pegar certos valores de um dictonary, list, ou tuple de uma maneira não explicita.
+	Ex: ``` head, *middle, tail = [1, 2, 3, 4, 5] ```
+	
+6. Falsy e Truthy: Strings vazias, listas, tuples, dicts e, é claro, o false são tratados como um `False` lógico.
+
+
+####Data types úteis
+
+Tirando os tipos básicos e as classes, python tem alguns data types interssantes.
+1. **Lists** 
+	* São ordered (a ordem dos elementos importa) e changeable (pode ser modificada depois de criada) data type podendo ter valores repetidos.
+	* Ex: ```
+			list = [[1,2,3], ['',0,6.7], 'bananas', True] 
+			print(list[1][2])
+		```
+	
+2. **Tuple** 
+	* São ordenadas (a posição dos elementos importa) "Unchangeable" (depois que você cria uma tuple não pode-se modificar ou adicionar algo nela ela)
+	* Ex: ```
+			tuple = ("abc", 34, True, 40, "male", ['bananas'])
+			print(tuple)
+		```
+	
+3. **Sets** 
+	* São unordered (a ordem não importa), unchangeable (os itens existentes não podem ser mudados, mas pode-se adicionar ou remover itens), além de não ser permitido elementos/números duplicados/repitidos.
+	* Ex: ```
+			set = {"abc", 34, True, 40, "male"}
+			print(set)
+		```
+		
+4. **Dictionary** 
+	* São parecidos com os objects em Javascript mas seu proposito é diferente (o mais proximo do objeto do JS são classes).
+	* Ex: ```
+			dict = {
+			  "brand": "Ford",
+			  "model": "Mustang",
+			  "year": 1964,
+			  "year": 2020
+			}
+			print(dict["brand"])
+		```
+5. **Dates**
+	* Dates não são um data type, mas são bastante usadas.
+	* Para usar, deve-se importr a biblioteca *datetime*
+	* Ex: 
+		```
+		import datetime
+		start = datetime.datetime.now()
+		print("long computation...")
+		end = datetime.datetime.now()
+		print(end-start)
+		```
+
+####Statements
+Não vou perder muito tempo aqui, no geral, a única coisa de diferente é o fato de não usar chaves e nem separar as a lógica dentro de parenteses.
+* Ternary Operator
+	* Ex: 
+		```
+		a = 404
+		b = 303.3
+		print(f"{a} > {b}") if a > b else print(f"{a} = {b}") if a == b else print(f"{a} < {b}")
+		```
+	* OBS: usa-se *elif* no lugar de else if
+
+* For loop:
+	* Ex:
+		```
+		fruits = ["apple", "banana", "cherry"]
+		for x in fruits:
+			if x == "banana": x = x.upper()
+			print(x)
+		print(fruits)
+		```
+* Functions:
+	* Ex 1:
+		```
+		def organi():
+			models = []
+			control = False
+			print("Choose one model to add to your desire list.\nTo stop just enter 'sauce time' and to check the list use 'taste'.")
+			while  control == False:
+				element=input("what is your demand? ")
+				if element == "sauce time": break
+				elif element == "taste": print(f"\nmodels\n")
+				else : 
+					models.append(element)
+			print("Le menu")
+			print(models,"Have a good meal.")	
+		organi()
+		``` 
+	* Ex 2:
+		```
+		def mdc():
+			a = int(input("diga um número: "))
+			b = int(input("diga um número: "))
+			while b != 0:
+			   r = a % b
+			   a = b
+			   b = r
+			print(f"mdc: {a}")
+		mdc() 
+		```
+	* OBS 1: **\*args** é passado como argumento quando não sabemos quantos parametros vamos receber. Dessa forma a função vai tratar args como uma tuple.
+	* OBS 2: **\*\*kwargs** é passado como argumento quando não sabemos quantos *keyword* parameters (key/value arguments) vamos receber. Dessa forma a função vai tratar kwargs como um dictionary.
+
+* Lambda:
+	* São funções 'anônimas'. É uma analogia ruim, mas dá pra tratar como se fosse uma arrow function do JS. Sintaxe: *lambda arguments : expression*
+	* Ex:
+		```
+		def myfunc(n):
+		  return lambda a : a * n
+
+		mydoubler = myfunc(2)
+		mytripler = myfunc(3)
+
+		print(mydoubler(11)) 
+		print(mytripler(11))
+		```
+
+####Classes/objects:
+É a essência/estrutura do python. Um dos paradigmas que python suporta é a programação voltada à objetos, ou seja, ela utiliza o conceito de objetos como entidades "fundamentais". Objetos são praticamente tudo, strings, variables, funções tudo isso são objetos. Cada objeto possue  "properties" e "methods", ou seja *estado* e *comportamento*
+
+Uma boa analogia é o carro. O carro tem propriedades, cor, potência, tamanho, e funcionalidades, ligar, freiar. Além disso o carro é composto por outras pequenas partes como o motor, freios, chasi e esses por usa vez também tem propriedades e funcionalidades.
+
+
+* \_\_init\_\_():
+	* É uma built-in function que é executada quando uma classe está sendo criada/definida, sendo portanto chamada de Constructor (igual à JS). Dentro desse constructor você deve passar primeiramente o **self**, e depois as properties. Você pode tratar self como o *this* do JS, só que você precisa passar o self dentro do \_\_init\_\_() para poder usar ele.
+
+	* Ex:
+		```
+		# Criando uma classe
+		class Car:
+			def __init__(self, model, price):
+				self.model = model;
+				self.price = price;
+
+			def info(self):
+				print(f"Car model: {self.model}")
+				print(f"Car model: {self.price}")
+
+		# criando um objeto
+		tesla = Car("Ultron", "9999");
+		ford = Car("Bananas", "666");
+
+		tesla.info();
+		ford.info();
+		```
+
+
+* Inheritance: 
+	Inheritance nos permite criar/definir classes com as mesmas properties e methods que outras classes. As classes literalmente herdam as caracteristicas e funcionalidades da *parent class*, sendo essa a *child class*
+	
+	* Ex:
+		```
+		#Parent class
+		class Person:
+		  def __init__(self, fname, lname):
+			self.first_name = fname
+			self.last_name = lname
+
+		  def printName(self):
+			print(self.first_name, self.last_name)
+			
+		#Child class (repare na sintaxe)
+		class Student(Person):
+		  def __init__(self, fname, lname, year):
+			#pegando o __init__ da Parent class ao mesmo tempo que passando params.
+			super().__init__(fname, lname)
+			self.graduation_year = year
+
+		  def welcome(self):
+			print("Welcome", self.first_name, self.last_name, "to the class of", self.graduation_year)
+
+		x = Student("Bananas", "Banano", 2027)
+		x.welcome()
+		```
+
+
+
+####Try & Except blocks:
+Ou o seu programa é executado ou ele Não é exutado e "quebra" em função de um erro. Entretando em situações profissionais (como em um sistema de uma empresa) o seu código NÃO PODE "quebrar" só porque você colou uma vírgula no lugar do ponto e vírgula, iria parar todo o sistema até descobrir onde foi, deixando usuários e transações a mão. 
+
+Dessa forma existem os Try e Except blocks. Tudo que estiver dentro do bloco *try* vai ser executado como se fosse normal, entretando podemos personalizar o output do erro e efetivamente Finalizar o trecho de código que o ocorreu no try, sem fechar o programa.
+Existe ainda o Finnally, um bloco de código que vai ser executado independentemente se o try deu certo ou não.
+
+Dentro do expect block (analogo ao catch do JS), podemos usar *raise*, analogo ao throw do JS, servindo para parar e desfazer o try block com uma mensagem de erro personalizada.
+
+```
+try:
+  x = int(input())
+  if x < 0: raise Exception(print("num must be > 0"))
+except:
+    pass
+finally:
+    print(f"num: {x}")
+    print("end")
+```
+
+####Manipulação de arquivos:
+
+* Com open() você pode abrir arquivos ao dar seu path e definir quais as suas permissions, por exemplo `open("./file.txt", "r+", encoding='utf-8')` vai abrir o arquivo e dar você o direito de ver e sobreescrever o arquivo. Com a opção *a* você pode adicionar coisas no final do arquivo.
+
+* Você pode atribuir uma variável ao ato de abrir um arquivo, ex: `var = open("./file.txt", "r+", encoding='utf-8')`. Também é importante que você saiba fechar o arquivo, isso é feito ao fazer `var.close()`. Quando você ler/abrir o arquivo crie o código para fecha-lo **imediatamente**.
+
+* OBS: Se necessário pesquisa mais sobre o assunto
+
+####Modules & PIP:
+Modules são pedaços de códigos em outros arquivos que podem ser reusadas. Para poder usar o que está nesse arquivo você tem que fazer `import module_or_file_name` logo no início no programa.
+
+Assim como node tem npm, python tem o PIP, o propósito é o mesmo. Ex:`pip install python-docx` (no terminal). Repare que nem sempre o nome usado para instalar vai ser o nome do module (usado no "import"), sendo recomendado saber onde elas são armazenados para poder checar os nomes corretos. Para listar todos os packages e modules que você tem atualmente faça 'pip list' no terminal.
+
+Você pode criar um apelido (alias) para o module, ex: `import numpy as np`. Antes: 'numpy.function()', Depois:'np.function()'. 
+Além disso você pode escolher qual função ou parte de um módulo você quer importar (ao usar o *from*). Ex: `from numpy import bananas`
+
+####Iterators:
+Iterators são objetos em python que podem ser iterados, ou seja, podem ser usados em um 'for loop'. Uma lista é um "iterable" object, ou seja, pode ser usado em "for" loop. Strings, tuples, listas e outros datatypes são iterables. Ex:
+```
+#criando uma string (que é um iterable)
+var = "bananas"
+#Armazenando o resultado da função iter()(um objeto) em obj_var.
+obj_var = iter(var);
+print(obj_var);
+#Usando o next() para chama o proximo item, nesse caso o index muda
+print(next(obj_var))
+#Baseado em quantas vezes o next() foi chamado, o resultado muda
+print(next(obj_var))
+```
+
+Para criar um objeto que também é um iterator basta que ele tenha dois methods: \_\_iter\_\_() e \_\_next\_\_(). Além disso, é uma boa prática usar o "StopIteration" para evitar que o comando fique rodando infinitamente. 
+
+Ex:
+```
+class MyNumbers:
+  def __init__(self, x):
+      self.notIterable = x;
+  
+  #dizendo quais properties desse objeto são iteráveis.
+  def __iter__(self):
+    self.a = 1 
+    return self 
+  
+  #especificando como a minha iteração/passo a passo vai ocorrer
+  def __next__(self):
+    #dizendo até quando a iteração ocorre
+    if self.a <= 10:
+      self.a += 1
+      return  self.a-1
+    else:
+      #garantindo que a iteração vai parar depois que chega em 10
+      raise StopIteration
+
+obj = MyNumbers(7)
+#'iter' configura e retorna a obj/lista iterada
+result = iter(obj)
+for item in result:
+  print(item, ' ', obj.notIterable)
+```
+
+####Generators
+
+São um tipo de iterator que criam/calculam os valores em tempo real. Enquanto os iterators normais armazenam os valores para cada iteração  e guardam eles até o final, os Generators não guardam todos os valores. Eles calculam o valor da iteração e guardam. Quando a proxima iteração vier, o valor que foi salvo antes vai ser Sobreescrito  e outro vai ser salvo em seu lugar e assim por diante, sendo *memory efficient*.
+
+* Yield: 
+	É uma keyword bem parecida com o return, a diferença é que ele retorna um generator, e como sabemos um generator é um iterator, e como sabemos um iterator pode ser quase qualquer coisa (normalmente um objeto).
+	A ideia do yield é aproveitar que o generator só vai repetir a operação 1 vez, não salvando o dado, para entregar ela a quem precisa antes que o dado desapareça.
+
+* Ex:
+	```
+	import sys
+	def simpleList(x):
+		nums = [];
+		n = 0;
+		while n <= x:
+			nums.append(n);
+			n += 1;
+		return nums;
+
+	def listGenerator(x):
+		n = 0;
+		while n <= x:
+			yield n;
+			n += 1;
+
+	x = listGenerator(2);
+	print(simpleList(2));
+	print(next(x), next(x), next(x));
+	# outro next(x) vai fazer raise de StopIteration
+
+	print(sys.getsizeof(simpleList(100)));
+	print(sys.getsizeof(listGenerator(100)));
+	```
+
+
+#### JSON:
+O básico: 
+```
+import json
+x =  { "name":"John", "age":30, 'city':'New York', "false":"True"}
+y = json.dumps(x, sort_keys=True) #convertendo de dict para json
+z = json.loads(y) # convertendo de json para dict
+
+print(x, type(x))
+print(y, type(y))
+print(z, type(z))		
+```
+
+
+#### RegEx
+RegEx ou regular expressions são sequências de caracteres que formam um padrão de busca. Você usa RegEx para procurar uma palavra no meio de um texto, uma extensão específica em uma pasta cheia de arquivos, coisas do tipo. 
+
+RegEx funciona de maneira diferentes dependendo da liguagem/sintaxe usada, mas o algoritimos de pesquisa se preserva (na maioria das vezes). Com o module built-in(não precisa instalar) chamado de "re" você pode trabalhar com regular expressions.
+
+Existem dezenas de *Metacharacters* e *Special Sequences* além de outros conceitos que estou deixando de fora, mas ficam aqui alguns interssantes:
+
+1. **\[\]** vai procurar/mostrar caracteres ou números dentro de um intervalo:
+	```
+	import re
+	txt = "Rain in Spain"
+	res = re.findall("[a-z]", txt) #dentro de [] é passado o padrão a ser procurado
+	print(res) #repare que as letras maiúsculas não aparecem
+	```
+	
+2. **\*** Vai procurar tudo que começa por um certo padrão mostrando zero ou mais ocorrecias.
+    ```
+	import re
+	txt = "hello planet"
+	x = re.findall("he.*o", txt) #procura alguma palavra que começa com "he", e termina com "o"
+	print(x)
+	#outra aplicação seria pesquisar por um arquivo com uma extensão específica em um diretório (ex: x = re.findall("*.txt", pasta))
+    ```
+
+
+3. Outros exemplos:
+	```
+	import re
+	txt = "The rain in Spain"
+	x = re.search(r"\bS\w+", txt) #procura por "S" e retorna um obj util em outras funcs
+	print(x)
+	print(x.group())
+	print(x.span(), '\n')
+
+	# --- #
+
+	txt = "Abacate e coxinhas não se dão muito bem."
+	x = re.search(r"\bcox\w+", txt) #Procurar pela primeira palavra que começa com "cox"
+	print(x)
+	print(x.group())
+	print(x.span(), '\n')
+	```
+
+
+
+

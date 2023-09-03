@@ -1,0 +1,130 @@
+@charset "UTF-8";
+
+*, *::after, *::before{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background: linear-gradient(
+        135deg,
+        #C08497,
+        #F7AF9D
+    );
+    height: 100vh;
+}
+
+h3{
+    font-size: 200%;
+    text-align: center;
+    margin-top: 35px;
+
+}
+
+h4{
+    font-size: 150%;
+    font-weight: 300;
+    text-align: center;
+    margin-top: -10px;
+    text-shadow: 1px 1px .5px rgba(0, 0, 0, 0.445);
+}
+
+form{
+    background-color: #F7E3AF;
+    width: 400px;
+    height: 500px;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: 0 25px 40px rgba(0,0,0,.35);
+    padding: 0 50px;
+}
+
+
+form *{
+    border: none;
+    outline: none;
+    font-family: "Crimson Pro",sans-serif;
+    padding: 2px;
+}
+
+input{
+    display: block;
+    position: absolute;
+    width: 300px;
+    height: .5px;
+    background-color: rgba(50, 205, 166, 0.877);;
+    color: rgb(19, 19, 19);
+    border-radius: 5px;
+    padding: 1.5px 4px;
+    font-size: larger;
+}
+
+#username{
+    top: 200px;
+    
+}
+
+label{
+    display: block;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 90%;
+    font-weight: 400;
+    color: rgb(0, 0, 0);
+    width: 80px;
+    text-align: center;
+}
+
+label[for="username"]{
+    background-color: rgba(153, 205, 50, 0.705);
+    border-radius: 3px;
+    margin-top: 75px;
+    transition: all ease-in .2s;
+}
+
+::placeholder{
+    color: transparent;
+}
+
+.newFormat::placeholder{
+    color: gray;
+}
+
+#password{
+    top: 300px;
+}
+
+label[for="password"]{
+    background-color: rgba(153, 205, 50, 0.705);
+    border-radius: 3px;
+    margin-top: 75px;
+    transition: all ease-in .2s;
+}
+
+label[for="username"]:hover, label[for="password"]:hover{
+    background-color: rgba(205, 60, 50, 0.856);
+}
+
+button{
+    position: absolute;
+    width: 100px;
+    height: 40px;
+    color: black;
+    font-size: 100%;
+    font-weight: 200;
+    background-color: white;
+    box-shadow: 0px 15px 20px rgba(0,0,0,.35);
+    margin-top: 75px;
+    margin-left: 25%;
+    margin-right: 25%;
+    cursor: pointer;
+    transition: all ease-in .2s;
+}
+button:hover{
+    box-shadow: 0px 15px 50px rgba(0, 0, 0, 0.699);
+}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="br">
+<head>
+    <title>Log-in screen with animation</title>
+    <link rel="stylesheet" href="./logScreen.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,200;0,300;0,400;1,400&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <main>
+    <!-- Adicionando funcionalidade com o node.js-->
+   <form action="/login" method="POST">
+       <!--  "action" é onde o arquivo vai ser salvo, dentro do nosso server -->
+        
+       <h3> Um novo mundo</h3>
+        <h4>- Entre já! -</h4>
+        
+        <!-- Troubleshooting: É crucial que seus imputs tenham o campo "name", Crucial -->
+        <input type="text" name="username" id="username" placeholder="Qual seu username?" autocomplete="false" required>
+        <label for="username" onclick="expand(this)">USERNAME</label>
+        
+        <input type="password" name="password" id="password" placeholder="Coloque sua senha" required>
+        <label for="password" onclick="expand(this)">PASSWORD</label>
+
+        <button type="submit">Entrar</button>
+    </form>
+</main>
+    <!--script-->
+    <script src="./logScreen.js"></script>
+</body>
+</html>
