@@ -4,69 +4,175 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Adivinhe o número || O jogo</title>
+    <link href="./output.css" rel="stylesheet">
     <style>
-        *::after, *::before, *{
-            margin: 0;
-            top: 0;
-            left: 0;
-            box-sizing: 0;
+        #dialogBox span:last-child{
+            background-color: rgb(187, 247, 208);
         }
-        body{
-            background-color: #E7FBBE;
-        }
-        #centering{
-            width: 900px;
-            box-shadow: 0px 2px 16px rgba(0, 0, 0, 0.616);
-            height: 700px;
-            background-color: #D9D7F1;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        #mainDisplay{
-            position: absolute;
-            width: 900px;
-            height: 550px;
-            background-size: cover;
-        }
-        .subDisplay{
-            position: absolute;
-            display: flex;
-            flex-direction: row;
-            width: 20%;
-            height: 150px;
-            top: 550px;
-            cursor: pointer;
-            background-size: cover;
-            border: 1px solid black;
-        }
-
-
     </style>
+
 </head>
-<body>
-    <div id="centering">
-        <div id="mainDisplay"></div>
-        <div class="subDisplay" id="c1" style="background-image: url(./forScience1.jpg);"
-        onclick="bgChange(c1)"></div>
-        <div class="subDisplay" id="c2" style="left: 20%; background-image: url(./forScience2.jpg);"
-        onclick="bgChange(c2)"></div>
-        <div class="subDisplay" id="c3" style="left: 40%; background-image: url(./forScience3.jpg);"
-        onclick="bgChange(c3)"></div>
-        <div class="subDisplay" id="c4" style="left: 60%; background-image: url(./forScience4.jpg);"
-        onclick="bgChange(c4)"></div>
-        <div class="subDisplay" id="c5" style="left: 80%; background-image: url(./forScience5.jpg);"
-        onclick="bgChange(c5)"></div>
-    </div>
+<body class="bg-indigo-300 h-screen">
+    <main>
+        <div>
+            <div id="all" class="md:w-10/12 lg:h-screen lg:w-1/2 m-auto bg-red-200 lg:p-10 md:p-8 p-4 w-full">
+                <div id="tutorial" class="bg-green-300 text-center md:p-8 p-4 rounded-md flex justify-center flex-col text-lg transition ease-linear duration-300">
+                    <h3 class="text-4xl mb-2">Adivinhe o número</h3>
+                    <p class="text-2xl mb-8">Como jogar:</p>
+                    <p>Um número aleatório entre 0 e 100 vai ser escolhido.</p>
+                    <p>Tente achar ele em 10 ou menos tentativas</p>
+                    <ul class="list-disc text-left p-4">
+                        <li>Escolha um número entre 0 e 100</li>
+                        <br>
+                        <li>Baseado na resposta "Número grande" ou "Número pequeno", escolha outro número</li>
+                        <br>
+                        <li>Você tem 10 tentativas para achar o número correto</li>
+                    </ul>
+                </div>
+
+                <div class="flex justify-center">
+                    <button class="text-center p-5 rounded-md bg-yellow-300 mt-5 ransition ease-linear duration-300" id="btn-start">Começar</button>
+                </div>
 
 
+                <div id="game" class="bg-blue-400 w-10/12 m-auto rounded-md hidden text-center p-10 transition ease-linear duration-300 opacity-0">
+                    <p class="text-3xl font-mono mb-20">Dê um palpite: </p>
+                    
+                    <div id="dialogBox" class="grid lg:grid-cols-2 gap-4 transition ease-linear duration-300 opacity-0">
+                        <div id="valuesPlaced" class="lg:col-span-1 bg-blue-500 rounded-md p-4 text-center text-lg">
+                            <p class="p-2">Respostas anteriores:</p>
+
+                        </div>
+
+                        <div class="lg:col-span-1 bg-blue-500 rounded-md p-4 text-center text-lg">
+                            <p id="tentativas" class="mb-4"></p>
+                            <p id="hint" class="bg-green-200"></p>
+                            
+                        </div>
+                    </div>
+                    <br>
+                    <p class="text-center lg:text-3xl md:text-2xl text-xl p-2" id="resp"></p>
+
+                    <div id="inputBox" class="-translate-y-28 transition ease-linear duration-200">
+                        <input id="answer" maxlength="3" default="0" class="border-2 border-black w-2/3 p-2 mb-10 text-center transition ease-linear duration-300" type="text" required>
+                        <br>
+                        <button id="guess" onclick="gameRun()" class="p-4 rounded-md bg-yellow-300 align-middle transition ease-linear duration-300">Enviar</button>
+                    </div>
+                </div>
+
+
+                <div class="flex justify-center">
+                    <button class="text-center p-5 rounded-md bg-yellow-300 mt-5 hidden" id="btn-restart">Jogar novamente</button>
+                </div>
+
+            </div>
+        </div>
+    </main>
+    
+    
     <script>
-        const mainDisplay = document.getElementById("mainDisplay");
-        function bgChange(self){
-            mainDisplay.style["background-image"] = self.style["background-image"];
+        const all = document.getElementById("all");
+        const initBtn = document.getElementById("btn-start");
+        const restartBtn = document.getElementById("btn-restart");
+        const tutorial = document.getElementById("tutorial");
+        const gameBox = document.getElementById("game");
+        const answer = document.getElementById("answer");
+        const resp = document.getElementById("resp");
+        const guess = document.getElementById("guess");
+        const feedback = document.getElementById("respostas");
+        const hint = document.getElementById("hint");
+        const tentativas = document.getElementById("tentativas");
+        const dialogBox = document.getElementById("dialogBox");
+        const inputBox = document.getElementById("inputBox");
+        const valuesPlaced = document.getElementById("valuesPlaced");
+
+        let goal = Math.floor(Math.random() * 100);
+        let chances = 10;
+        
+        initBtn.addEventListener('click', () => {
+            tutorial.classList.toggle("opacity-0");
+            setTimeout( () => {tutorial.classList.toggle("hidden");}, 200);
+
+            initBtn.classList.toggle("hidden");
+            setTimeout( () => {initBtn.classList.toggle("opacity-0")}, 200);
+
+            gameBox.classList.toggle("hidden");
+            setTimeout( () => {gameBox.classList.toggle("opacity-0")}, 200);
+        });
+
+        restartBtn.addEventListener('click', () => {
+            setTimeout( () => {tutorial.classList.toggle("opacity-0")}, 200);
+            setTimeout( () => {tutorial.classList.toggle("hidden")}, 500);
+            //tutorial.classList.toggle("opacity-0");
+            initBtn.classList.toggle("opacity-0");
+            setTimeout( () => {initBtn.classList.toggle("hidden")}, 500);
+            gameBox.classList.toggle("opacity-0");
+            setTimeout( () => {gameBox.classList.toggle("hidden")}, 200);
+            restartBtn.classList.toggle("hidden");
+            guess.classList.toggle("opacity-0");
+            answer.classList.toggle("opacity-0");
+            //dialogBox.classList.toggle("opacity-0");
+            resp.classList.toggle("--translate-y-28");
+            inputBox.classList.toggle("-translate-y-28");
+            guess.disabled = false;
+            hint.innerHTML="";
+            resp.innerHTML="";
+            goal = Math.floor(Math.random() * 100);
+            chances = 10;
+            lastGuess.remove();
+        });
+
+        function gameRun(){
+            if(chances === 10){
+                dialogBox.classList.toggle("opacity-0");
+                inputBox.classList.toggle("-translate-y-28");
+                const lastGuess = document.createElement('div');
+                lastGuess.setAttribute('id', 'lastGuess');
+                valuesPlaced.append(lastGuess);
+            }
+            chances = chances - 1;
+            tentativas.innerHTML = `você tem ${chances} chances`;
+            const ultimoPalpite = document.createElement('span');
+            ultimoPalpite.innerHTML = `${Number(answer.value)} `;
+            lastGuess.append(ultimoPalpite);
+            
+                if(chances > 0){
+                    if(Number(answer.value) === goal){
+                        resp.innerHTML = `Você ganhou em ${10 - (chances-1)} tentativa's`
+                        guess.disabled = true;
+                        guess.classList.toggle("opacity-0");
+                        restartBtn.classList.toggle("hidden");
+                        answer.classList.toggle("opacity-0");
+                        dialogBox.classList.toggle("opacity-0");
+                        resp.classList.toggle("-translate-y-36");
+                        all.classList.toggle("h-8/12");
+                    }
+                    if(Number(answer.value) < goal){
+                        hint.innerHTML = "Valor Pequeno"
+                    }
+                    if(Number(answer.value) > goal){
+                        hint.innerHTML = "Valor Grande"
+                    }
+                } else{
+                    resp.innerHTML = `Você perdeu. O valor era: ${goal}`
+                    guess.disabled = true;
+                    restartBtn.classList.toggle("hidden");
+                    guess.classList.toggle("opacity-0");
+                    answer.classList.toggle("opacity-0");
+                    dialogBox.classList.toggle("opacity-0");
+                    resp.classList.toggle("--translate-y-36");
+                }
+                answer.value = '';
         }
+
+        answer.addEventListener('keyup', function(event){
+            if(event.keyCode === 13){
+                gameRun();
+            }
+        })
+
+
     </script>
 </body>
 </html>
