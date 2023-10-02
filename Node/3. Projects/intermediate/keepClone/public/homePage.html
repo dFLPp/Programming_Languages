@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <link rel="stylesheet" href="./style.css">
+    <title>keep clone</title>
+    <style>
+        
+
+    </style>
+</head>
+<body>
+    <div id="msg" class="ocult"><p>You must connect to use the app</p></div>
+    <div id="work-arround">
+    <div id="nav-bar">
+        <div id="user-avatar"> 
+            <span> welcome</span> 
+            <span id="user-name">"username"</span>
+        </div>
+        <div> <button id="log-out">log-out</button> </div>
+    </div>
+
+    <div id="container">
+        <form id="form">
+            <label for="title">title</label>
+            <input type="text" placeholder="title" name="title" id="title" required>
+            <br>
+            <label for="note">note</label>
+            <input type="text" placeholder="note" name="note" id="note" required>
+            <br>
+            <label for="status">status</label>
+            <select name="status" id="status">
+                <option value="pendent">pendent</option>
+                <option value="completed">completed</option>
+            </select>
+            <br>
+            <button type="submit" id="submit-btn">submit</button>
+        </form>
+
+        <p id="feedback" class="ocult">An error ocourred - try again later</p>
+    </div>
+    <div id="notes-container"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="app.js"> </script>
+</body>
+</html>

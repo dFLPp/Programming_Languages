@@ -1,0 +1,25 @@
+:root{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --primary-color: #041C32;
+    --secondary-color: #04293A;
+    --tertiary-color: #064663;
+}
+
+body{
+    margin: 0;
+    top: 0;
+    min-height: 100vh;
+    background-color: var(--primary-color);
+    background: linear-gradient(
+        180deg,
+        var(--primary-color),
+        var(--secondary-color),
+        var(--tertiary-color)
+    );
+    color: white;
+}
+
+h1{
+    text-align: center;
+    font-size: 3rem;
+}

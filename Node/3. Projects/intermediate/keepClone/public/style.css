@@ -1,0 +1,138 @@
+*, ::after, ::before{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    background-color: #292a73;
+}
+
+#container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transform: translateY(20%);
+}
+#form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background-color: #3e4491;
+    margin: 1em;
+}
+
+#form button, #log-out{
+    background-color: #3a9efd;
+    padding: 1em;
+    border: none;
+    cursor: pointer;
+    font-size: medium;
+    font-weight: 300;
+}
+
+#form label, a{
+    background-color: #FD993A;
+    border-radius: .2px;
+    padding: .4em;
+}
+#form input{
+    margin: 1rem;
+    padding: 1em;
+    outline: none;
+}
+
+#feedback{
+    padding: 4px;
+    margin: 1em;
+    background-color: #F700CE;
+    border-radius: .3em;
+}
+
+.ocult{
+    display: none;
+}
+
+#status{
+    margin: 1rem;
+    padding: 1em;
+    outline: none;
+}
+
+#nav-bar{
+    display: flex;
+    z-index: 10;
+    top: 0;
+    position: sticky;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em;
+    background-color: #1a1b4b;
+}
+
+#user-avatar{
+    display: grid;
+    grid-template-columns: [first] 1fr [sec] 1fr;
+    background-color: #F700CE;
+    font-size: medium;
+    align-items: center;
+    text-align: center;
+}
+#user-name{
+    background-color: #CEF700;
+    padding: 1em;
+}
+
+#msg{
+    background-color: #FD993A;
+    text-align: center;
+    padding: 1em;
+}
+#notes-container{
+    transform: translateY(12em);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    padding: 1em;
+}
+#notes-container div{
+    padding: 1em;
+    border-radius: .3em;
+    background-color: #3e4491;
+    margin: .5em;
+}
+#note-component{
+    display: grid;
+    grid-template-rows: [first] .1fr [sec] 1fr [third] .1fr;
+}
+#note-component div{
+    margin: .1em;
+    background-color: #FD993A;
+    text-align: center;
+}
+#note-component #options{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+#options button{
+    background-color: #F700CE;
+    padding: .8em;
+    border: none;
+    cursor: pointer;
+    border-radius: 2px;
+    font-size: medium;
+    font-weight: 400;
+}
+#status-feedback{
+    background-color: #CEF700;
+    padding: .8em;
+    border: none;
+    border-radius: 2px;
+    font-size: medium;
+    font-weight: 400;
+}

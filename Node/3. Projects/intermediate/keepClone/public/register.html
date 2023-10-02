@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <title>Login</title>
+    <style>
+        *, ::after, ::before{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            background-color: #292a73;
+        }
+
+        #container{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            
+            transform: translateY(30%);
+        }
+        #form{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background-color: #3e4491;
+            margin: 1em;
+        }
+
+        #form button{
+            background-color: #3a9efd;
+            padding: 1em;
+            border: none;
+            cursor: pointer;
+            font-size: medium;
+            font-weight: 300;
+        }
+        
+        #form label, a{
+            background-color: #f7a400;
+            border-radius: .1em;
+            padding: 2px;
+        }
+        #form input{
+            margin: 1rem;
+            padding: 1em;
+            outline: none;
+        }
+
+        #feedback{
+            padding: 4px;
+            margin: 1em;
+            background-color: #F700CE;
+            border-radius: .3em;
+        }
+
+        .ocult{
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div id="container">
+        <form id="form">
+            <label for="username">username</label>
+            <input type="text" placeholder="username" name="username" id="username" required>
+            <br>
+            <label for="email">email</label>
+            <input type="text" placeholder="email" name="email" id="email" required>
+            <br>
+            <label for="password">Password</label>
+            <input type="password" placeholder="password" name="password" id="password" required>
+            <br>
+            <button type="submit" id="submit-btn">submit</button>
+        </form>
+
+        <p><a href="./index.html">Login</a></p>
+        <p id="feedback" class="ocult">An error ocourred - try again later</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script> 
+        const formDOM = document.getElementById("form");
+        const usernameDOM = document.getElementById("username");
+        const emailDOM = document.getElementById("email");
+        const passwordDOM = document.getElementById("password");
+        const submitDOM = document.getElementById("submit-btn");
+        const feedbackDOM = document.getElementById("feedback");
+
+        formDOM.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            try {
+                const username = usernameDOM.value;
+                const email = emailDOM.value;
+                const password = passwordDOM.value;
+
+                const data = await axios.post("/api/v1/auth/register", {username, email, password});
+                const token = data.data.token;
+                console.log(data);
+                localStorage.setItem("token", token);
+                window.location = "/homePage.html";
+
+            } catch (error) {
+                console.log(error);
+                emailDOM.value = ""
+                passwordDOM.value = ""
+                feedbackDOM.innerHTML = error.response.data.msg
+                feedbackDOM.classList.remove("ocult");
+            }
+            setTimeout(() => {
+                    feedbackDOM.classList.add("ocult");
+            }, 4000)
+        })
+    </script>
+</body>
+</html>

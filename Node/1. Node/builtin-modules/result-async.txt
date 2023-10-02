@@ -1,0 +1,1 @@
+The result is: Testing sync e Async 'fs' module

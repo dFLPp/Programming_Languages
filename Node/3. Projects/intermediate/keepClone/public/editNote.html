@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <title>editar nota</title>
+    <style>
+        *, ::after, ::before{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            background-color: #292a73;
+        }
+
+        #container{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            
+            transform: translateY(20%);
+        }
+        #form{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background-color: #3e4491;
+            margin: 1em;
+        }
+
+        #form button{
+            background-color: #3a9efd;
+            padding: 1em;
+            border: none;
+            cursor: pointer;
+            font-size: medium;
+            font-weight: 300;
+        }
+        
+        #form label, a{
+            background-color: #f7a400;
+            border-radius: .1em;
+            padding: 2px;
+        }
+        #edit-header{
+            background-color: #f7a400;
+            border-radius: .1em;
+            padding: 2em;
+            font-size: large;
+        }
+        #form input{
+            margin: 1rem;
+            padding: 1em;
+            outline: none;
+        }
+
+        #feedback{
+            padding: 4px;
+            margin: 1em;
+            background-color: #F700CE;
+            border-radius: .3em;
+        }
+
+        .ocult{
+            display: none;
+        }
+        #status{
+            margin: 1em;
+            padding: .5em;
+
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="container">
+        <p id="edit-header">Note #ID</p>
+        <form id="form">
+            <label for="title">title</label>
+            <input type="text" placeholder="title" name="title" id="title" required>
+            <br>
+            <label for="note">note</label>
+            <input type="text" placeholder="note" name="note" id="note" required>
+            <br>
+            <label for="status">status</label>
+            <select name="status" id="status">
+                <option value="pendent">pendent</option>
+                <option value="completed">completed</option>
+            </select>
+            <br>
+            <button type="submit" id="submit-btn">EDIT</button>
+        </form>
+
+        <p id="feedback" class="ocult">An error ocourred - try again later</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script> 
+        const formDOM = document.getElementById("form");
+        const titleDOM = document.getElementById("title");
+        const noteDOM = document.getElementById("note");
+        const statusDOM = document.getElementById("status");
+        const submitDOM = document.getElementById("submit-btn");
+        const editHeader = document.getElementById("edit-header");
+        const token = localStorage.getItem("token");
+        const noteID = window.location.href.split("=")[1];
+        window.onload = () => {
+            const noteID = window.location.href.split("=")[1];
+            editHeader.innerHTML = `Note ${noteID}`
+        }
+
+        const getNote = async () => { 
+            const noteID = window.location.href.split("=")[1];
+            const note = await axios.get(`/api/v1/notes/${noteID}`, { params: { token: token, noteID: noteID }})
+            .then((result) => {
+                titleDOM.value = result.data.note.title;
+                noteDOM.value = result.data.note.content;
+                statusDOM.value = result.data.note.status;
+            })
+        }
+        getNote();
+
+        formDOM.addEventListener("submit", async (e) => {
+            e.preventDefault()
+            try {
+                const title = titleDOM.value;
+                const note = noteDOM.value;
+                const status =  statusDOM.value;
+
+                await axios.patch(`/api/v1/notes/${noteID}`, {
+                        title: title,
+                        content: note,
+                        status: status
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+                window.location = "/homePage.html";
+
+            } catch (error) {
+                console.log(error);
+                titleDOM.value = "";
+                noteDOM.value = "";
+                statusDOM.value = "";
+            }
+        })
+    </script>
+</body>
+</html>
